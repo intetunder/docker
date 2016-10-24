@@ -8,6 +8,3 @@ ENV MYVALUE my-value
 EXPOSE 80
 
 CMD ["/usr/sbin/apache2ctl","-D","FOREGROUND"]
-
-
-#test
