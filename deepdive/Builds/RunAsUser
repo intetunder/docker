@@ -1,0 +1,6 @@
+# Dockerfile based on the latest centos 7 image - non-privilged user entry
+FROM centos:latest
+MAINTAINER sander@darknet.fyi
+
+RUN useradd -ms /bin/bash user
+USER user
