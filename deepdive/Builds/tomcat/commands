@@ -1,0 +1,67 @@
+Download:
+apache-tomcat-7.0.79.tar.gz
+apache-tomcat-8.5.16.tar.gz
+jdk-7u80-linux-x64.tar.gz
+jdk-8u141-linux-x64.tar.gz
+sample.war
+
+Move files into /root/docker/downloads
+
+#######################JDK7#######################
+docker run -it --name=jdk7 -v /root/docker/downloads:/root/downloads centos:centos6 /bin/bash
+In container jdk7 run:
+cd /root/downloads
+yum install git wget sudo which 
+mkdir tmp
+cd tmp
+tar zxvf ../jdk-7u80-linux-x64.tar.gz 
+mv jdk1.7.0_80/ /opt/java
+alternatives --install /usr/bin/java java /opt/java/bin/java 2
+alternatives --config java 
+alternatives --install /usr/bin/jar jar /opt/java/bin/jar 2
+alternatives --install /usr/bin/javac javac /opt/java/bin/javac 2
+alternatives --set jar /opt/java/bin/jar 
+alternatives --set javac /opt/java/bin/javac
+exit
+!!! after exiting java container !!!
+docker commit jdk7 centos6:java7
+
+#######################JDK8#######################
+docker run -it --name=jdk8 -v /root/docker/downloads:/root/downloads centos:centos6 /bin/bash
+In container jdk7 run:
+cd /root/downloads
+yum install git wget sudo which 
+cd tmp
+tar zxvf ../jdk-8u141-linux-x64.tar.gz 
+mv jdk1.8.0_1410/ /opt/java
+alternatives --install /usr/bin/java java /opt/java/bin/java 2
+alternatives --config java 
+alternatives --install /usr/bin/jar jar /opt/java/bin/jar 2
+alternatives --install /usr/bin/javac javac /opt/java/bin/javac 2
+alternatives --set jar /opt/java/bin/jar 
+alternatives --set javac /opt/java/bin/javac
+exit
+!!! after exiting java container !!!
+docker commit jdk8 centos6:java8
+
+
+#################Java7/Tomcat7#################
+docker run -it --name=java7tomat7 -v /root/docker/downloads:/root/downloads -p 8180:8080 centos6:java7 /bin/bash
+cd /root/downloads/tmp
+tar zxvf ../apache-tomcat-7.0.79.tar.gz 
+mv apache-tomcat-7.0.79/ /opt/tomcat
+export JAVA_HOME=/opt/java
+export JAVA_JRE=/opt/java
+export CATALINA_BASE=/opt/tomcat
+export CATALINA_HOME=/opt/tomcat
+export CATALINA_TMPDIR=/opt/tomcat/temp/
+cd /opt/tomcat/bin
+./startup.sh &
+ps aux | grep tomcat
+exit
+!!! after exiting java container !!!
+docker commit java7tomat7 centos6:jdk7tomcat7
+
+Rinse and reapeat for the next 3 containers.
+
+Finished part three02:48
