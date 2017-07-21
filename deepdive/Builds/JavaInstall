@@ -1,0 +1,20 @@
+# Dockerfile based on the latest centos 7 image - non-privilged user entry
+FROM centos:latest
+MAINTAINER sander@darknet.fyi
+
+RUN useradd -ms /bin/bash user
+
+RUN echo "EXPORT 192.168.0.0/24" >> /etc/exports.list
+
+RUN yum update -y
+RUN yum install -y net-tools wget 
+
+RUN cd /root/ && wget "http://javadl.oracle.com/webapps/download/AutoDL?BundleId=220302_d54c1d3a095b4ff2b6607d096fa80163" -O jre-8.rpm 
+
+RUN yum localinstall -y /root/jre-8.rpm
+
+USER user
+
+RUN cd ~ && echo "export JAVA_HOME=/usr/java/jdk1.8.0/jre" >> /home/user/.bashrc
+
+ENV JAVA_BIN /usr/java/jdk1.8.0/jre/bin
