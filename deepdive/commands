@@ -1,0 +1,75 @@
+Docker repo [Centos 7]
+[dockerrepo]
+name=Docker Repository
+baseurl=https://yum.dockerproject.org/repo/main/centos/7
+enabled=1
+gpgcheck=1
+gpgkey=https://yum.dockerproject.org/gpg
+
+cd /var/run && ls -al dock*
+usermod -a -G docker [username] - to run as non root users
+
+docker images - show downloaded images
+
+docker pull [image] - download image
+
+docker search [keyword] - search for images from the docker hub
+
+docker run [image:tag] - runs the image 
+docker run -d [image] - run in background 
+docker run -it [image] [command to run /bin/bash] - interactive and terminal mode
+docker run --name=[name] image - to give your container a name
+docker run --name=[name] -P [image] - make the ports available on the host on random port 
+
+docker run -d -p 8080:80,8443:443 image - bind container port to specific port so bind 8080 to 80 on the container
+docker port $CONTAINERPORT - display the ports used by containers
+
+docker run -d -v [mountpoint] image - make a mountpoint
+example:
+docker run -d -p 8080:80 --name=server4 -v /home/user/www:/usr/share/nginx/html nginx - will link the www folder from the host to the container
+
+docker inspect [image or imageID] - show information about the image
+
+docker ps - show what images are running [-a - all you run]
+docker ps -a -q - show only ID
+
+docker stop [name or id] - stops a running container
+docker stop `docker ps -q` - stop all containers.
+
+docker attach [containerID/name] - connect to the docker container
+
+docker restart [containerID/name] - restart the container
+
+docker exec [containerid/name] [command] - to execute a command on the container add -it for interactive and terminal mode
+
+docker rmi [repo:tag/imageID] - delete and image (remove image)
+docker rmi -f [repo:tag/imageID] - delete with force
+
+docker rm [dockerID] - remove container
+docker rm `docker ps -a -q` - remove all stopped containers
+
+docker search ubuntu
+
+docker commit -m "Already installed SSH and created test user" -a "Sander" b5f439b51661 sander/ubusshd:v1 - create your own docker image after installing and configuring a running one
+
+docker build -t="sander/ubusshdonly:v2" < /location/of/dockerfile
+docker build -t username/name . - build a dockerfile, . for working dir
+
+docker logs [container id] - show logs from what hsa been run in the docker image
+
+docker exec a44275c32c49 /bin/cat /etc/profile - run commands on the container
+
+docker run -d ubuntu:xenial /bin/bash -c "while true; do echo Hello;sleep 1; done"
+
+docker run -d -p 80:80  nginx:latest - bind local port 80 to docker process port 80
+docker run -d -p 8080:80 nginx:latest - bind local port 8080 to docker process port 80
+
+docker exec -u 0 -it ed8da92da253 /bin/bash - login to container as root
+
+
+
+#### base web
+docker run --name=webtest -v /var/docker/dockerwww:/var/www/html -it centos6:baseweb  --- mount dockerwww from host sytem to www/html on container
+
+
+docker run --name=externalweb -p 8081:80 -it -v /var/docker/dockerwww:/var/www/html centos6:serverv1 /bin/bash - port 80 in container reachable on the docker machine at 8081
