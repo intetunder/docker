@@ -1,0 +1,9 @@
+# Dockerfile based on the latest centos 7 image - non-privilged user entry
+FROM centos:latest
+MAINTAINER sander@darknet.fyi
+
+RUN useradd -ms /bin/bash user
+
+RUN echo "EXPORT 192.168.0.0/24" >> /etc/exports.list
+
+USER user
