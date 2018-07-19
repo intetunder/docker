@@ -1,0 +1,4 @@
+export DOMAIN_NAME=<my-dtr-domain>
+export TCP_PORT=<dtr-port>
+openssl s_client -connect $DOMAIN_NAME:$TCP_PORT -showcerts </dev/null 2>/dev/null | openssl x509 -outform PEM | tee /usr/local/share/ca-certificates/$DOMAIN_NAME.crt
+update-ca-certificates
